@@ -1,0 +1,10 @@
+# sensitive
+.env*
+!.env.example
+
+# build
+tmp
+
+# custom
+.DS_Store
+vault
