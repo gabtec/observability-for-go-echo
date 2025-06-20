@@ -4,17 +4,42 @@ import (
 	"context"
 	"gabtec/go-echo-obs-app/internal/handlers"
 	mw "gabtec/go-echo-obs-app/internal/middleware"
+	opentelemetry "gabtec/go-echo-obs-app/internal/openTelemetry"
+	u "gabtec/go-echo-obs-app/internal/utils"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
+	"go.opentelemetry.io/otel"
 )
 
 func main() {
+	// load env - do not fail on error because containers auto inject var without dotenv file
+	godotenv.Load()
+
+	addr := u.GetStringEnv("SERVER_ADDR", ":1323")
+	serviceName := u.GetStringEnv("OTEL_SERVICE_NAME", "my-echo-log-app")
+	otelURL := u.GetStringEnv("OTEL_ENDPOINT", "localhost:4316")
+
+	// observability: traces
+	ctx := context.Background()
+	tp := opentelemetry.NewTraceProvider(ctx, otelURL, serviceName)
+	defer func() { _ = tp.Shutdown(ctx) }()
+
+	otel.SetTracerProvider(tp)
+
+	// // Finally, set the tracer that can be used to create custom SPAN's, inside each route handler
+	// tracer = tp.Tracer(serviceName)
+	// // Or
+	// // just use a middleware (2**)
+
+	// App
 	e := echo.New()
 
 	// Common middleware
@@ -22,6 +47,7 @@ func main() {
 	// e.Use(middleware.Logger())
 	e.Use(mw.NewCustomLogger())
 	e.Use(mw.NewPrometheusPerRequestMeter())
+	e.Use(otelecho.Middleware(serviceName)) // (2**)
 	e.Use(middleware.Recover())
 
 	// API Endpoints
@@ -33,7 +59,7 @@ func main() {
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	// e.Logger.Fatal(e.Start(":1323"))
-	startServerWithGracefulShutdown(e, ":1323")
+	startServerWithGracefulShutdown(e, addr)
 }
 
 func startServerWithGracefulShutdown(e *echo.Echo, addr string) {

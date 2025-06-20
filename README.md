@@ -41,12 +41,25 @@ go install github.com/air-verse/air@latest
 air init
 
 # v2 - add observability
+go get github.com/joho/godotenv
 go get github.com/prometheus/client_golang/prometheus/promhttp
 
+## METRICS
 ## create teh /metrics endpoint, by adding:
 e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 ## next, enhance it by adding per/route metrics, using a custom middleware to wrap every request handler func
 e.Use(mw.PrometheusMiddleware())
+
+## TRACES
+go get go.opentelemetry.io/otel
+go get go.opentelemetry.io/otel/sdk/resource
+go get go.opentelemetry.io/otel/sdk
+go get go.opentelemetry.io/otel/exporters/otlp/otlptrace
+go get go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho
+
+## LOGS
+## not available yet, for Go
+## must fetch them from app/pod stdout
 ```
 
 ## Usage
