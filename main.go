@@ -34,11 +34,6 @@ func main() {
 
 	otel.SetTracerProvider(tp)
 
-	// // Finally, set the tracer that can be used to create custom SPAN's, inside each route handler
-	// tracer = tp.Tracer(serviceName)
-	// // Or
-	// // just use a middleware (2**)
-
 	// App
 	e := echo.New()
 
@@ -47,6 +42,11 @@ func main() {
 	// e.Use(middleware.Logger())
 	e.Use(mw.NewCustomLogger())
 	e.Use(mw.NewPrometheusPerRequestMeter())
+	// // Finally, set the tracer that can be used to create custom SPAN's, inside each route handler
+	// handlers.SetCustomTracer(tp.Tracer(serviceName))
+	e.Use(mw.NewTracerMiddleware(tp.Tracer(serviceName)))
+	// // Or
+	// // just use a middleware (2**)
 	e.Use(otelecho.Middleware(serviceName)) // (2**)
 	e.Use(middleware.Recover())
 

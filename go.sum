@@ -55,6 +55,8 @@ go.opentelemetry.io/auto/sdk v1.1.0 h1:cH53jehLUN6UFLY71z+NDOiNJqDdPRaXzTel0sJyS
 go.opentelemetry.io/auto/sdk v1.1.0/go.mod h1:3wSPjt5PWp2RhlCcmmOial7AvC4DQqZb7a7wCow3W8A=
 go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.61.0 h1:xUA/nAR2CsyadSjADVOwu6ZRpAtvB8HUqg/+bbuqhZ4=
 go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho v0.61.0/go.mod h1:/V0rmKWoHzXI2ROCfKE2PKPoo6hdlU1GRtzwzuO/3jc=
+go.opentelemetry.io/contrib/propagators/b3 v1.36.0 h1:xrAb/G80z/l5JL6XlmUMSD1i6W8vXkWrLfmkD3w/zZo=
+go.opentelemetry.io/contrib/propagators/b3 v1.36.0/go.mod h1:UREJtqioFu5awNaCR8aEx7MfJROFlAWb6lPaJFbHaG0=
 go.opentelemetry.io/otel v1.36.0 h1:UumtzIklRBY6cI/lllNZlALOF5nNIzJVb16APdvgTXg=
 go.opentelemetry.io/otel v1.36.0/go.mod h1:/TcFMXYjyRNh8khOAO9ybYkqaDBb/70aVwkNML4pP8E=
 go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.36.0 h1:dNzwXjZKpMpE2JhmO+9HsPl42NIXFIFSUSSs0fiqra0=
