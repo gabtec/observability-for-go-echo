@@ -19,7 +19,7 @@ func IndexHandler(c echo.Context) error {
 	resp := map[string]interface{}{
 		"endpointsList": endpoints,
 		"version":       version.Version(),
-		"observability": "not implemented",
+		"observability": "implemented",
 	}
 
 	return u.JSONOK(c, resp)

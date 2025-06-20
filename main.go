@@ -11,6 +11,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -20,12 +21,16 @@ func main() {
 	e.Use(middleware.RequestID())
 	// e.Use(middleware.Logger())
 	e.Use(mw.NewCustomLogger())
+	e.Use(mw.NewPrometheusPerRequestMeter())
 	e.Use(middleware.Recover())
 
 	// API Endpoints
 	e.GET("/", handlers.IndexHandler)
 	e.GET("/random", handlers.RandomHandler)
 	e.GET("/log/:type", handlers.LogHandler)
+
+	// observability: metrics
+	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 
 	// e.Logger.Fatal(e.Start(":1323"))
 	startServerWithGracefulShutdown(e, ":1323")

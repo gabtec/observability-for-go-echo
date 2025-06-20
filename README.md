@@ -39,7 +39,14 @@ go get github.com/labstack/echo/v4
 go install github.com/air-verse/air@latest
 
 air init
-# v1
+
+# v2 - add observability
+go get github.com/prometheus/client_golang/prometheus/promhttp
+
+## create teh /metrics endpoint, by adding:
+e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
+## next, enhance it by adding per/route metrics, using a custom middleware to wrap every request handler func
+e.Use(mw.PrometheusMiddleware())
 ```
 
 ## Usage
